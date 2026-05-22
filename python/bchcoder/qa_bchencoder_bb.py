@@ -21,8 +21,13 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-import bchencoder_swig as bchencoder
 import time
+except ImportError:
+    import os
+    import sys
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    sys.path.append(os.path.join(dirname, "bindings"))
+    from gnuradio.bchcoder import bchencoder_bb
 
 class qa_bchencoder_bb(gr_unittest.TestCase):
 

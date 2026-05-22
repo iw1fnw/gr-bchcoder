@@ -23,14 +23,14 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include <bchencoder/bchclass.h>
+#include <gnuradio/bchcoder/bchclass.h>
 
 namespace gr {
-  namespace bchencoder {
+  namespace bchcoder {
 
     bchclass::bchclass(int type)
     {
-      int i,j;
+      int i;
       // TODO Auto-generated constructor stub
       for (i=0;i<21;i++)
             p[i] = 0;
@@ -120,7 +120,7 @@ namespace gr {
         * alpha=2 is the primitive element of GF(2**m)
         */
       {
-              register int    i, mask;
+              int    i, mask;
 
               mask = 1;
               alpha_to[m] = 0;
@@ -154,8 +154,8 @@ namespace gr {
         * the above cycle sets.
         */
       {
-              register int    ii, jj, ll, kaux;
-              register int    test, aux, nocycles, root, noterms, rdncy;
+              int    ii, jj, ll, kaux;
+              int    test, aux, nocycles, root, noterms, rdncy;
               int             cycle[1024][21], size[1024], min[1024], zeros[1024];
 
               /* Generate cycle sets modulo n, n = 2**m - 1 */
@@ -254,8 +254,8 @@ namespace gr {
         * by the generator polynomial g(x).
         */
         {
-          register int    i, j;
-          register int    feedback;
+          int    i, j;
+          int    feedback;
 
           for (i = 0; i < length - k; i++)
                   bb[i] = 0;
@@ -305,9 +305,9 @@ namespace gr {
         * them, only detect them. We output the information bits uncorrected.
         */
         {
-            register int    i, j, u, q, t2, count = 0, syn_error = 0;
+            int    i, j, u, q, t2, count = 0, syn_error = 0;
             int             elp[1026][1024], d[1026], l[1026], u_lu[1026], s[1025];
-            int             root[200], loc[200], err[1024], reg[201];
+            int             loc[200], reg[201];
 
             t2 = 2 * t;
 
@@ -446,9 +446,7 @@ namespace gr {
                                 reg[j] = (reg[j] + j) % n;
                                 q ^= alpha_to[reg[j]];
                             }
-                        if (!q) {   /* store root and error
-                                * location number indices */
-                            root[count] = i;
+                        if (!q) {   /* location number indices */
                             loc[count] = n - i;
                             count++;
                             //printf("%3d ", n - i);
@@ -474,6 +472,6 @@ namespace gr {
             return 1;
         }
 
-  } /* namespace bchencoder */
+  } /* namespace bchcoder */
 } /* namespace gr */
 

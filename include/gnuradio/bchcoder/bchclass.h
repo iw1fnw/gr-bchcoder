@@ -18,29 +18,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BCHENCODER_BCHCLASS_H
-#define INCLUDED_BCHENCODER_BCHCLASS_H
+#ifndef INCLUDED_BCHCODER_BCHCLASS_H
+#define INCLUDED_BCHCODER_BCHCLASS_H
 
-#include <bchencoder/api.h>
+#include <gnuradio/bchcoder/api.h>
 #include <stdint.h>
 #include <stdio.h>
 
-#define		  BCH15_5 	1
+#define	    BCH15_5 	1
 #define     BCH15_7 	2
 #define     BCH15_11 	3
-#define     BCH31_6		4
+#define     BCH31_6	4
 #define     BCH31_11	5
-#define     BCH63_7		6
+#define     BCH63_7	6
 #define     BCH63_10	7
 
 namespace gr {
-  namespace bchencoder {
+  namespace bchcoder {
 
     /*!
      * \brief <+description+>
      *
      */
-    class BCHENCODER_API bchclass
+    class BCHCODER_API bchclass
     {
     public:
       int m, n, length, k, t, d;
@@ -49,8 +49,8 @@ namespace gr {
 
       void encode_bch( uint8_t datai[],uint8_t datao[]);
 
+      int decode_bch( uint8_t datai[],uint8_t datao[]);
 
-	    int decode_bch( uint8_t datai[],uint8_t datao[]);
     private:
 
       int p[21];
@@ -82,8 +82,8 @@ namespace gr {
 
     };
 
-  } // namespace bchencoder
+  } // namespace bchcoder
 } // namespace gr
 
-#endif /* INCLUDED_BCHENCODER_BCHCLASS_H */
+#endif /* INCLUDED_BCHCODER_BCHCLASS_H */
 

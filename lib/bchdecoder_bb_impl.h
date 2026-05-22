@@ -4,14 +4,14 @@
  *
  */
 
-#ifndef INCLUDED_BCHENCODER_BCHDECODER_BB_IMPL_H
-#define INCLUDED_BCHENCODER_BCHDECODER_BB_IMPL_H
+#ifndef INCLUDED_BCHCODER_BCHDECODER_BB_IMPL_H
+#define INCLUDED_BCHCODER_BCHDECODER_BB_IMPL_H
 
-#include <bchencoder/bchdecoder_bb.h>
-#include <bchencoder/bchclass.h>
+#include <gnuradio/bchcoder/bchdecoder_bb.h>
+#include <gnuradio/bchcoder/bchclass.h>
 
 namespace gr {
-  namespace bchencoder {
+  namespace bchcoder {
 
     class bchdecoder_bb_impl : public bchdecoder_bb
     {
@@ -33,8 +33,8 @@ namespace gr {
 
     };
 
-  } // namespace bchencoder
+  } // namespace bchcoder
 } // namespace gr
 
-#endif /* INCLUDED_BCHENCODER_BCHDECODER_BB_IMPL_H */
+#endif /* INCLUDED_BCHCODER_BCHDECODER_BB_IMPL_H */
 

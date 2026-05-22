@@ -1,7 +1,6 @@
 /*!
- * \defgroup block GNU Radio BCHENCODER C++ Signal Processing Blocks
- * \brief All C++ blocks that can be used from the BCHENCODER GNU Radio
+ * \defgroup block GNU Radio BCHCODER C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the BCHCODER GNU Radio
  *        module are listed here or in the subcategories below.
  *
  */
-

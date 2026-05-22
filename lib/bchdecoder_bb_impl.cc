@@ -12,11 +12,11 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "bchdecoder_bb_impl.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace bchencoder {
+  namespace bchcoder {
 
     bchdecoder_bb::sptr
     bchdecoder_bb::make(int bchtype)
@@ -86,6 +86,6 @@ namespace gr {
       return blks*bch->k;
     }
 
-  } /* namespace bchencoder */
+  } /* namespace bchcoder */
 } /* namespace gr */
 

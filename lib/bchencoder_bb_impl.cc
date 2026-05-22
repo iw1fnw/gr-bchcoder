@@ -22,18 +22,16 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "bchencoder_bb_impl.h"
+#include <gnuradio/io_signature.h>
 
 
 namespace gr {
-  namespace bchencoder {
+  namespace bchcoder {
 
-    bchencoder_bb::sptr
-    bchencoder_bb::make(int bchtype)
+    bchencoder_bb::sptr bchencoder_bb::make(int bchtype)
     {
-      return gnuradio::get_initial_sptr
-        (new bchencoder_bb_impl(bchtype));
+        return gnuradio::make_block_sptr<bchencoder_bb_impl>(bchtype);
     }
 
 
@@ -131,6 +129,6 @@ namespace gr {
       return blks*bch->length;
     }
 
-  } /* namespace bchencoder */
+  } /* namespace bchcoder */
 } /* namespace gr */
 

@@ -1,8 +1,8 @@
-id: bchencoder_bchencoder_bb
+id: bchcoder_bchencoder_bb
 label: bchencoder bb
-category: '[Bchencoder]'
+category: '[bchcoder]'
 templates:
-  imports: import bchencoder
+  imports: from gnuradio import bchcoder
   make: bchencoder.bchencoder_bb(${bchtype})
 parameters:
 - id: bchtype

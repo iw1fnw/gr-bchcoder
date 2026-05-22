@@ -11,7 +11,14 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-import bchencoder_swig as bchencoder
+try:
+    from gnuradio.bchcoder import bchdecoder_bb
+except ImportError:
+    import os
+    import sys
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    sys.path.append(os.path.join(dirname, "bindings"))
+    from gnuradio.bchcoder import bchdecoder_bb
 
 class qa_bchdecoder_bb(gr_unittest.TestCase):
 
