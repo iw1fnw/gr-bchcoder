@@ -71,8 +71,7 @@ namespace gr {
         break;
       } */
 
-      bch=new bchclass(bchtype);
-      printf("construido");
+      bch=new BCHCode(bchtype);
       set_output_multiple(bch->length);
     }
 

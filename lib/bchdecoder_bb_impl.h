@@ -17,7 +17,7 @@ namespace gr {
     {
      private:
       // Nothing to declare in this block.
-      bchclass *bch;
+      BCHCode *bch;
 
      public:
       bchdecoder_bb_impl(int bchtype);

@@ -18,10 +18,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BCHCODER_BCHCLASS_H
-#define INCLUDED_BCHCODER_BCHCLASS_H
+#ifndef INCLUDED_BCHCLASS_H
+#define INCLUDED_BCHCLASS_H
 
-#include <gnuradio/bchcoder/api.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -33,57 +32,49 @@
 #define     BCH63_7	6
 #define     BCH63_10	7
 
-namespace gr {
-  namespace bchcoder {
-
-    /*!
-     * \brief <+description+>
-     *
-     */
-    class BCHCODER_API bchclass
-    {
-    public:
-      int m, n, length, k, t, d;
-      bchclass(int type);
-      ~bchclass();
-
-      void encode_bch( uint8_t datai[],uint8_t datao[]);
-
-      int decode_bch( uint8_t datai[],uint8_t datao[]);
-
-    private:
-
-      int p[21];
-      int alpha_to[1048576], index_of[1048576], g[548576];
-      int recd[1048576], data[1048576], bb[548576];
-
-      void generate_gf();
-      /*
-        * Generate field GF(2**m) from the irreducible polynomial p(X) with
-        * coefficients in p[0]..p[m].
-        *
-        * Lookup tables:
-        *   index->polynomial form: alpha_to[] contains j=alpha^i;
-        *   polynomial form -> index form:     index_of[j=alpha^i] = i
-        *
-        * alpha=2 is the primitive element of GF(2**m)
-        */
 
 
-      void gen_poly();
-      /*
-        * Compute the generator polynomial of a binary BCH code. Fist generate the
-        *   cycle sets modulo 2**m - 1, cycle[][] =  (i, 2*i, 4*i, ..., 2^l*i). Then
-        *   determine those cycle sets that contain integers in the set of (d-1)
-        *   consecutive integers {1..(d-1)}. The generator polynomial is calculated
-        *   as the product of linear factors of the form (x+alpha^i), for every i in
-        *   the above cycle sets.
-        */
+class BCHCode {
+public:
+  int m, n, length, k, t, d;
+  BCHCode(int type);
 
-    };
+  void encode_bch( uint8_t datai[],uint8_t datao[]);
 
-  } // namespace bchcoder
-} // namespace gr
+  int decode_bch( uint8_t datai[],uint8_t datao[]);
 
-#endif /* INCLUDED_BCHCODER_BCHCLASS_H */
+private:
+
+  int p[21];
+  int alpha_to[1048576], index_of[1048576], g[548576];
+  int recd[1048576], data[1048576], bb[548576];
+
+  void generate_gf();
+  /*
+    * Generate field GF(2**m) from the irreducible polynomial p(X) with
+    * coefficients in p[0]..p[m].
+    *
+    * Lookup tables:
+    *   index->polynomial form: alpha_to[] contains j=alpha^i;
+    *   polynomial form -> index form:     index_of[j=alpha^i] = i
+    *
+    * alpha=2 is the primitive element of GF(2**m)
+    */
+
+
+  void gen_poly();
+  /*
+    * Compute the generator polynomial of a binary BCH code. Fist generate the
+    *   cycle sets modulo 2**m - 1, cycle[][] =  (i, 2*i, 4*i, ..., 2^l*i). Then
+    *   determine those cycle sets that contain integers in the set of (d-1)
+    *   consecutive integers {1..(d-1)}. The generator polynomial is calculated
+    *   as the product of linear factors of the form (x+alpha^i), for every i in
+    *   the above cycle sets.
+    */
+
+};
+
+
+
+#endif /* INCLUDED_BCHCLASS_H */
 

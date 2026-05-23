@@ -32,7 +32,7 @@ namespace gr {
      private:
       // Nothing to declare in this block.
       //bch_type mybchtype;
-      bchclass *bch;
+      BCHCode *bch;
 
      public:
       bchencoder_bb_impl(int bchtype);
