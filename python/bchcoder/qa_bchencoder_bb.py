@@ -39,7 +39,7 @@ class qa_bchencoder_bb(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_001_bchencoder_bb(self):
+    def test_encode_one_frame(self):
         src_data=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         expected_result=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         src = blocks.vector_source_b(src_data)
@@ -52,7 +52,7 @@ class qa_bchencoder_bb(gr_unittest.TestCase):
         self.assertListEqual(expected_result, result_data)
 
 
-    def test_002_bchencoder_bb(self):
+    def test_encode_two_frames(self):
         src_data=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         expected_result=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         src = blocks.vector_source_b(src_data)
