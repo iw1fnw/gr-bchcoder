@@ -16,13 +16,11 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace bchcoder {
+namespace bchcoder {
 
-    bchdecoder_bb::sptr
-    bchdecoder_bb::make(int bchtype)
+    bchdecoder_bb::sptr bchdecoder_bb::make(int bchtype)
     {
-      return gnuradio::get_initial_sptr
-        (new bchdecoder_bb_impl(bchtype));
+        return gnuradio::make_block_sptr<bchdecoder_bb_impl>(bchtype);
     }
 
 
@@ -43,6 +41,7 @@ namespace gr {
      */
     bchdecoder_bb_impl::~bchdecoder_bb_impl()
     {
+        delete bch;
     }
 
     void
@@ -72,7 +71,7 @@ namespace gr {
           for(int j=0;j < bch->length;j++){
             blockinput[j]=in[j+(i*bch->length)];
           }
-          bch->decode_bch(blockinput,blockoutput);
+          bch->decode(blockinput,blockoutput);
           for(int j=0;j < bch->k;j++){
             out[j+(i*bch->k)]=blockoutput[j];
           }

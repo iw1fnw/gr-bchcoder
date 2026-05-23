@@ -80,6 +80,7 @@ namespace gr {
      */
     bchencoder_bb_impl::~bchencoder_bb_impl()
     {
+        delete bch;
     }
 
     void
@@ -114,7 +115,7 @@ namespace gr {
           for(int j=0;j < bch->k;j++){
             blockinput[j]=in[j+(i*bch->k)];
           }
-          bch->encode_bch(blockinput,blockoutput);
+          bch->encode(blockinput,blockoutput);
           for(int j=0;j < bch->length;j++){
             out[j+(i*bch->length)]=blockoutput[j];
           }

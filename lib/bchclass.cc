@@ -231,7 +231,7 @@ void BCHCode::gen_poly()
 //         }
 }
 
-void BCHCode::encode_bch(uint8_t datai[],uint8_t datao[])
+void BCHCode::encode(uint8_t datai[],uint8_t datao[])
 /*
 * Compute redundacy bb[], the coefficients of b(x). The redundancy
 * polynomial b(x) is the remainder after dividing x^(length-k)*datai(x)
@@ -264,7 +264,7 @@ void BCHCode::encode_bch(uint8_t datai[],uint8_t datao[])
         datao[i + length - k] = datai[i];
 }
 
-int BCHCode::decode_bch(uint8_t datai[],uint8_t datao[])
+int BCHCode::decode(uint8_t datai[],uint8_t datao[])
   /*
   * Simon Rockliff's implementation of Berlekamp's algorithm.
   *
@@ -294,6 +294,13 @@ int BCHCode::decode_bch(uint8_t datai[],uint8_t datao[])
 
     t2 = 2 * t;
 
+    /* copy input codeword to output */
+    count=0;
+    for (i = length - k; i < length; i++) {
+        datao[count]= datai[i];
+        count++;
+    }
+    
     /* first form the syndromes */
     //printf("S(x) = ");
 
@@ -436,18 +443,16 @@ int BCHCode::decode_bch(uint8_t datai[],uint8_t datao[])
             printf("\n");
             if (count == l[u]){
             /* no. roots = degree of elp hence <= t errors */
-                for (i = 0; i < l[u]; i++)
-                    datai[loc[i]] ^= 1;
-            } else {    /* elp has degree >t hence cannot solve */
-                printf("Incomplete decoding: errors detected\n");
-                return -1;
-            }
+                for (i = 0; i < l[u]; i++) {
+                    int idx = loc[i] - (length - k);
+                    if (idx >= 0)
+                        datao[idx] ^= 1;
+                }
+                return l[u];
+            } 
         }
+        printf("Incomplete decoding: errors detected\n");
+        return -1;
     }
-    count=0;
-    for (i = length - k; i < length; i++) {
-        datao[count]= datai[i];
-        count++;
-    }
-    return 1;
+    return 0;
 }

@@ -39,9 +39,9 @@ public:
   int m, n, length, k, t, d;
   BCHCode(int type);
 
-  void encode_bch( uint8_t datai[],uint8_t datao[]);
+  void encode( uint8_t datai[],uint8_t datao[]);
 
-  int decode_bch( uint8_t datai[],uint8_t datao[]);
+  int decode( uint8_t datai[],uint8_t datao[]);
 
 private:
 
