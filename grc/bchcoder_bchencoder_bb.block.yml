@@ -3,7 +3,7 @@ label: bchencoder bb
 category: '[bchcoder]'
 templates:
   imports: from gnuradio import bchcoder
-  make: bchencoder.bchencoder_bb(${bchtype})
+  make: bchcoder.bchencoder_bb(${bchtype})
 parameters:
 - id: bchtype
   label: Bch Type
