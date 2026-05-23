@@ -30,17 +30,16 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
 
     def test_001_t(self):
         # set up fg
-        src_data=(0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0)
-        expected_result=(0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0)
+        src_data=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
+        expected_result=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         src = blocks.vector_source_b(src_data)
-        encod= bchencoder.bchdecoder_bb(3)
+        decod= bchdecoder_bb(3)
         dst = blocks.vector_sink_b()
-        self.tb.connect(src, encod)
-        self.tb.connect(encod, dst)
+        self.tb.connect(src, decod)
+        self.tb.connect(decod, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertTupleEqual(expected_result, result_data)
-        # check data
+        self.assertListEqual(expected_result, result_data)
 
 
 if __name__ == '__main__':
