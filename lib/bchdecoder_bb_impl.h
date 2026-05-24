@@ -20,7 +20,7 @@ namespace gr {
       BCHCode *bch;
 
      public:
-      bchdecoder_bb_impl(int bchtype);
+      bchdecoder_bb_impl(int length, int k, int t);
       ~bchdecoder_bb_impl();
 
       // Where all the action really happens

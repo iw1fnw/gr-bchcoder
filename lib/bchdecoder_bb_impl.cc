@@ -18,21 +18,21 @@
 namespace gr {
 namespace bchcoder {
 
-    bchdecoder_bb::sptr bchdecoder_bb::make(int bchtype)
+    bchdecoder_bb::sptr bchdecoder_bb::make(int length, int k, int t)
     {
-        return gnuradio::make_block_sptr<bchdecoder_bb_impl>(bchtype);
+        return gnuradio::make_block_sptr<bchdecoder_bb_impl>(length, k, t);
     }
 
 
     /*
      * The private constructor
      */
-    bchdecoder_bb_impl::bchdecoder_bb_impl(int bchtype)
+    bchdecoder_bb_impl::bchdecoder_bb_impl(int length, int k, int t)
       : gr::block("bchdecoder_bb",
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(1, 1, sizeof(unsigned char)))
     {
-      bch=new BCHCode(bchtype);
+      bch=new BCHCode(length, k, t);
       set_output_multiple(bch->k);
     }
 

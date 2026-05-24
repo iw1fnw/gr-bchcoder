@@ -43,7 +43,7 @@ class qa_bchencoder_bb(gr_unittest.TestCase):
         src_data=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         expected_result=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         src = blocks.vector_source_b(src_data)
-        encod= bchencoder_bb(3)
+        encod= bchencoder_bb(15, 11, 1)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, encod)
         self.tb.connect(encod, dst)
@@ -56,7 +56,7 @@ class qa_bchencoder_bb(gr_unittest.TestCase):
         src_data=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         expected_result=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         src = blocks.vector_source_b(src_data)
-        encod= bchencoder_bb(3)
+        encod= bchencoder_bb(15, 11, 1)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, encod)
         self.tb.connect(encod, dst)

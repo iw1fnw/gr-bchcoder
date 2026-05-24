@@ -32,7 +32,7 @@ public:
      * class. bchcoder::bchdecoder_bb::make is the public interface for
      * creating new instances.
      */
-    static sptr make(int bchtype);
+    static sptr make(int length, int k, int t);
 };
 
 } // namespace bchcoder

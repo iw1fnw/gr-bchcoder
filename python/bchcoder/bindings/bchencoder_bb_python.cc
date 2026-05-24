@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(bchencoder_bb.h) */
-/* BINDTOOL_HEADER_FILE_HASH(46ef1128da6313dc2fd8919f54cf4701) */
+/* BINDTOOL_HEADER_FILE_HASH(68b3009f802c0b911f78c59bea18b29b) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,8 +37,8 @@ void bind_bchencoder_bb(py::module &m) {
              std::shared_ptr<bchencoder_bb>>(m, "bchencoder_bb",
                                              D(bchencoder_bb))
 
-      .def(py::init(&bchencoder_bb::make), py::arg("bchtype"),
-           D(bchencoder_bb, make))
+      .def(py::init(&bchencoder_bb::make), py::arg("length"), py::arg("k"),
+           py::arg("t"), D(bchencoder_bb, make))
 
       ;
 }

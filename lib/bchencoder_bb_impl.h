@@ -35,7 +35,7 @@ namespace gr {
       BCHCode *bch;
 
      public:
-      bchencoder_bb_impl(int bchtype);
+      bchencoder_bb_impl(int length, int k, int t);
       ~bchencoder_bb_impl();
 
       // Where all the action really happens

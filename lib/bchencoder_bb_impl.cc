@@ -29,49 +29,22 @@
 namespace gr {
   namespace bchcoder {
 
-    bchencoder_bb::sptr bchencoder_bb::make(int bchtype)
+    bchencoder_bb::sptr bchencoder_bb::make(int length, int k, int t)
     {
-        return gnuradio::make_block_sptr<bchencoder_bb_impl>(bchtype);
+        return gnuradio::make_block_sptr<bchencoder_bb_impl>(length, k, t);
     }
 
 
     /*
      * The private constructor
      */
-    bchencoder_bb_impl::bchencoder_bb_impl(int bchtype)
+    bchencoder_bb_impl::bchencoder_bb_impl(int length, int k, int t)
       : gr::block("bchencoder_bb",
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(1, 1, sizeof(unsigned char)))
             //mybchtype(bchtype)
     {
-      /* switch (bchtype)
-      {
-      case 1:
-        mybchtype=bch_type::BCH15_5;
-        break;
-      case 2:
-        mybchtype=bch_type::BCH15_7;
-        break;
-      case 3:
-        mybchtype=bch_type::BCH15_11;
-        break;
-      case 4:
-        mybchtype=bch_type::BCH31_6;
-        break;
-      case 5:
-        mybchtype=bch_type::BCH31_11;
-        break;
-      case 6:
-        mybchtype=bch_type::BCH63_7;
-        break;
-      case 7:
-        mybchtype=bch_type::BCH63_10;
-        break;
-      default:
-        break;
-      } */
-
-      bch=new BCHCode(bchtype);
+      bch=new BCHCode(length, k, t);
       set_output_multiple(bch->length);
     }
 
@@ -86,13 +59,7 @@ namespace gr {
     void
     bchencoder_bb_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-      /* <+forecast+> e.g. ninput_items_required[0] = noutput_items */
       ninput_items_required[0] = (noutput_items*bch->k)/bch->length;
-      
-      //printf("input req: %d outputs:%d\n",ninput_items_required[0],noutput_items);
-      //printf("len: %d k:%d\n",bch->length,bch->k);
-      
-      
     }
 
     int

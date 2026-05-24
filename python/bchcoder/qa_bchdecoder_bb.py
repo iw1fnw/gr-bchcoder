@@ -33,7 +33,7 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
         src_data=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         expected_result=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
         src = blocks.vector_source_b(src_data)
-        decod= bchdecoder_bb(3)
+        decod= bchdecoder_bb(15, 11, 1)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, decod)
         self.tb.connect(decod, dst)
@@ -50,7 +50,7 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
                 corrupted_data = src_data.copy()
                 corrupted_data[error_pos] ^= 1
                 src = blocks.vector_source_b(corrupted_data)
-                decod= bchdecoder_bb(3)
+                decod= bchdecoder_bb(15, 11, 1)
                 dst = blocks.vector_sink_b()
                 self.tb.connect(src, decod)
                 self.tb.connect(decod, dst)
@@ -68,7 +68,7 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
                 corrupted_data[pos1] ^= 1
                 corrupted_data[pos2] ^= 1     
                 src = blocks.vector_source_b(corrupted_data)
-                decod= bchdecoder_bb(3)
+                decod= bchdecoder_bb(15, 11, 1)
                 dst = blocks.vector_sink_b()
                 self.tb.connect(src, decod)
                 self.tb.connect(decod, dst)

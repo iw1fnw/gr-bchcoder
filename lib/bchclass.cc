@@ -19,80 +19,41 @@
  */
 
 #include <gnuradio/bchcoder/bchclass.h>
+#include <stdexcept>
 
-BCHCode::BCHCode(int type)
+BCHCode::BCHCode(int length_p, int k_p, int t_p)
+    : length(length_p),
+      k(k_p),
+      t(t_p)
 {
-    int i;
-    // TODO Auto-generated constructor stub
-    for (i=0;i<21;i++)
-        p[i] = 0;
+    if (length <= 0)
+        throw std::invalid_argument("BCHCode: n must be > 0");
+    if (k <= 0 || k >= length)
+        throw std::invalid_argument("BCHCode: k must satisfy 0 < k < length");
 
     /*
-     * setup code specific params.
+     * set m = roundup(log_2(length))
      */
-    switch(type) {
-    case BCH15_5:
-        /*   (15,5,7) BCH Code */
-        k=5;      t=3;      m = 4;     length = 15;
-        break;
-    case BCH15_7:
-        /*   (15,7,5) BCH code */
-        k=7;      t=2;      m = 4;     length = 15;
-        break;
-    case BCH15_11:
-        /*   (15,11,3) BCH code */
-        k=11;     t=1;      m = 4;     length = 15;
-        break;
-    case BCH31_6:
-        /*   (31,6,15) BCH code */
-        k=6;      t=7;      m = 5;     length = 31;
-        break;
-    case BCH31_11:
-        /*   (31,11,11) BCH code */
-        k=11;     t=5;      m = 5;     length = 31;
-        break;
-    case BCH63_7:
-        /*   (63,7,31) BCH code */
-        k=7;      t=15;     m = 6;     length = 63;
-        break;
-    case BCH63_10:
-        /*   (63,10,37) BCH code */
-        k=10;     t=13;     m = 6;     length = 63;
-        break;
-    }
-
+    m = 1;
+    while ((1 << m) - 1 < length) ++m;
+    if (m > 20)
+        throw std::invalid_argument("BCHCode: length too large (m would exceed 20)");
+    
     /*
      * next set n = 2^m-1.
      */
-    n=1;
-    for (i=0;i<m;i++)
-        n*=2;
-    n-=1;
+    n = (1 << m) - 1;
 
     /*
-      * Set length specific params.
-      */
-    switch(type) {
-    case BCH15_5:
-    case BCH15_7:
-    case BCH15_11:
-        /* p(x) = 11001 */
-        p[0]=1;      p[1]=1;      p[4]=1;
-        break;
-    case BCH31_6:
-    case BCH31_11:
-        /* p(x) = 101001 */
-        p[0]=1;      p[2]=1;      p[5]=1;
-        break;
-    case BCH63_7:
-    case BCH63_10:
-        /* p(x) = 1100001 */
-        p[0]=1;      p[1]=1;      p[6]=1;
-        break;
-    }
+     * Set primitive polynomial
+     */
+    for (int i = 0; i<21; i++)
+        p[i] = (prim_poly_table[m] >> i) & 1;
+    
     generate_gf();
     gen_poly();
 }
+
 
 void BCHCode::generate_gf()
 /*

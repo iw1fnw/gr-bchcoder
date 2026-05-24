@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(bchdecoder_bb.h) */
-/* BINDTOOL_HEADER_FILE_HASH(d0fae34ea02b92f01e9807494c4aa0e6) */
+/* BINDTOOL_HEADER_FILE_HASH(95ab0321c3dfe0b949f8a4c3ccef8541) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,8 +37,8 @@ void bind_bchdecoder_bb(py::module &m) {
              std::shared_ptr<bchdecoder_bb>>(m, "bchdecoder_bb",
                                              D(bchdecoder_bb))
 
-      .def(py::init(&bchdecoder_bb::make), py::arg("bchtype"),
-           D(bchdecoder_bb, make))
+      .def(py::init(&bchdecoder_bb::make), py::arg("length"), py::arg("k"),
+           py::arg("t"), D(bchdecoder_bb, make))
 
       ;
 }
