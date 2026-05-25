@@ -26,9 +26,15 @@
 
 class BCHCode {
 public:
-    int m, n, length, k, t, d;
+    int m, n, length, k, t, d;  // d may not be needed here. Used only withing gen_poly().
+    uint32_t prim_poly;
+    bool lsb_first, parity_first;
     
-    BCHCode(int length_p, int k_p, int t_p);
+    BCHCode(int length_p, int k_p, int t_p,
+            uint32_t prim_poly_p = 0,
+            uint32_t gen_poly_p = 0,
+            bool lsb_first_p = false,
+            bool parity_first_p = false);
     
     void encode( uint8_t datai[],uint8_t datao[]);
 

@@ -21,37 +21,57 @@
 #include <gnuradio/bchcoder/bchclass.h>
 #include <stdexcept>
 
-BCHCode::BCHCode(int length_p, int k_p, int t_p)
+BCHCode::BCHCode(int length_p, int k_p, int t_p,
+            uint32_t prim_poly_p,
+            uint32_t gen_poly_p,
+            bool lsb_first_p,
+            bool parity_first_p)
     : length(length_p),
       k(k_p),
-      t(t_p)
+      prim_poly(prim_poly_p),
+      lsb_first(lsb_first_p),
+      parity_first(parity_first_p)
 {
     if (length <= 0)
         throw std::invalid_argument("BCHCode: n must be > 0");
     if (k <= 0 || k >= length)
         throw std::invalid_argument("BCHCode: k must satisfy 0 < k < length");
 
-    /*
-     * set m = roundup(log_2(length))
-     */
+    // set m = roundup(log_2(length))
     m = 1;
     while ((1 << m) - 1 < length) ++m;
     if (m > 20)
         throw std::invalid_argument("BCHCode: length too large (m would exceed 20)");
     
-    /*
-     * next set n = 2^m-1.
-     */
+    // set n = 2^m-1.
     n = (1 << m) - 1;
 
-    /*
-     * Set primitive polynomial
-     */
+    // Set primitive polynomial
+    if (prim_poly == 0)
+        prim_poly = prim_poly_table[m];
     for (int i = 0; i<21; i++)
-        p[i] = (prim_poly_table[m] >> i) & 1;
+        p[i] = (prim_poly >> i) & 1;
     
+    // Generate galois field
     generate_gf();
-    gen_poly();
+    
+    // Generate generator polynomial
+    if (gen_poly_p != 0) {
+        int deg_g = 0;
+        for (int tmp = gen_poly_p; tmp > 0; tmp >>= 1, deg_g++)
+            g[deg_g] = tmp & 1;
+        deg_g--;
+        if (deg_g != (length - k))
+            throw std::invalid_argument("BCHCode: generator polynomial degree (" +
+            std::to_string(deg_g) + ") != n - k (" + std::to_string(length - k) + "). "
+            "Check t, n, k consistency.");
+        t = deg_g / m;
+    } else {
+        if (t_p == 0)
+            throw std::invalid_argument("BCHCode: must provide at least one of t > 0 or gen_poly");
+        t = t_p;
+        gen_poly();
+    }
 }
 
 
@@ -202,8 +222,10 @@ void BCHCode::encode(uint8_t datai[],uint8_t datao[])
     int    i, j;
     int    feedback;
 
+    // Initialize reminder
     for (i = 0; i < length - k; i++)
         bb[i] = 0;
+    // Division (fastest version when compiled with -O3)
     for (i = k - 1; i >= 0; i--) {
         feedback = datai[i] ^ bb[length - k - 1];
         if (feedback != 0) {
@@ -212,13 +234,14 @@ void BCHCode::encode(uint8_t datai[],uint8_t datao[])
                     bb[j] = bb[j - 1] ^ feedback;
                 else
                     bb[j] = bb[j - 1];
-            bb[0] = g[0] && feedback;
+            bb[0] = 1;  // it was bb[0] = g[0] && feedback, but g[0] is 1 by construction and feedback is also 1.
         } else {
             for (j = length - k - 1; j > 0; j--)
                 bb[j] = bb[j - 1];
             bb[0] = 0;
         }
     }
+    // Copy data and reminder to output
     for (i = 0; i < length - k; i++)
         datao[i] = bb[i];
     for (i = 0; i < k; i++)
