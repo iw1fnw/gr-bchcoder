@@ -21,6 +21,32 @@ except ImportError:
     sys.path.append(os.path.join(dirname, "bindings"))
     from gnuradio.bchcoder import bchdecoder_bb
 
+# -----------------------------
+# Test Codeword for BCH(15,11,1)
+# -----------------------------
+codeword_15_11 = [0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
+
+# -----------------------------
+# Test Codeword for BCH(30,15,3)
+# -----------------------------
+codeword_30_15 = [0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0] # Reversed
+
+# -----------------------------
+# Test Codeword for BCH(125,104,3)
+# -----------------------------
+codeword_125_104_1 = [1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1,
+                      1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
+                      1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0,
+                      0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1] # Reversed
+codeword_125_104_2 = [1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0,
+                      1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1,
+                      1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0,
+                      1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1,
+                      1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0] # Reversed
+
 class qa_bchdecoder_bb(gr_unittest.TestCase):
 
     def setUp(self):
@@ -30,11 +56,11 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
         self.tb = None
 
     def test_no_errors(self):
-        src_data=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
-        expected_result=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
-        src = blocks.vector_source_b(src_data)
-        decod= bchdecoder_bb(15, 11, 1)
-        dst = blocks.vector_sink_b()
+        src_data        = codeword_15_11
+        expected_result = codeword_15_11[4:]
+        src   = blocks.vector_source_b(src_data)
+        decod = bchdecoder_bb(15, 11, 1)
+        dst   = blocks.vector_sink_b()
         self.tb.connect(src, decod)
         self.tb.connect(decod, dst)
         self.tb.run()
@@ -43,8 +69,8 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
             msg=f"Failed to decode corrected sequence")
 
     def test_one_error(self):
-        src_data=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
-        expected_result=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
+        src_data        = codeword_15_11
+        expected_result = codeword_15_11[4:]
         for error_pos in range(len(src_data)):
             with self.subTest(error_pos=error_pos):
                 corrupted_data = src_data.copy()
@@ -60,8 +86,8 @@ class qa_bchdecoder_bb(gr_unittest.TestCase):
                     msg=f"Failed to correct single-bit error at position {error_pos}")
 
     def test_two_errors(self):
-        src_data=[0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
-        expected_result=[0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0]
+        src_data        = codeword_15_11[4:]
+        expected_result = codeword_15_11[4:]
         for pos1, pos2 in combinations(range(len(src_data)), 2):
             with self.subTest(pos1=pos1, pos2=pos2):
                 corrupted_data = src_data.copy()
