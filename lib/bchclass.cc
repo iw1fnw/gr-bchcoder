@@ -18,7 +18,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/bchcoder/bchclass.h>
+#include "bchclass.h"
 #include <stdexcept>
 
 BCHCode::BCHCode(int length_p, int k_p, int t_p,
@@ -424,7 +424,7 @@ int BCHCode::decode(uint8_t datai[],uint8_t datao[])
                     //printf("%3d ", n - i);
                 }
             }
-            printf("\n");
+//            printf("\n");
             if (count == l[u]){
             /* no. roots = degree of elp hence <= t errors */
                 for (i = 0; i < l[u]; i++) {
@@ -435,7 +435,7 @@ int BCHCode::decode(uint8_t datai[],uint8_t datao[])
                 return l[u];
             } 
         }
-        printf("Incomplete decoding: errors detected\n");
+//        printf("Incomplete decoding: errors detected\n");
         return -1;
     }
     return 0;

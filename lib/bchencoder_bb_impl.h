@@ -21,8 +21,8 @@
 #ifndef INCLUDED_BCHCODER_BCHENCODER_BB_IMPL_H
 #define INCLUDED_BCHCODER_BCHENCODER_BB_IMPL_H
 
+#include "bchclass.h"
 #include <gnuradio/bchcoder/bchencoder_bb.h>
-#include <gnuradio/bchcoder/bchclass.h>
 
 namespace gr {
   namespace bchcoder {

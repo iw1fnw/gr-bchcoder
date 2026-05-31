@@ -7,8 +7,8 @@
 #ifndef INCLUDED_BCHCODER_BCHDECODER_BB_IMPL_H
 #define INCLUDED_BCHCODER_BCHDECODER_BB_IMPL_H
 
+#include "bchclass.h"
 #include <gnuradio/bchcoder/bchdecoder_bb.h>
-#include <gnuradio/bchcoder/bchclass.h>
 
 namespace gr {
   namespace bchcoder {

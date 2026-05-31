@@ -24,5 +24,4 @@
 install(FILES
     api.h
     bchencoder_bb.h
-    bchclass.h
     bchdecoder_bb.h DESTINATION include/gnuradio/bchcoder)
