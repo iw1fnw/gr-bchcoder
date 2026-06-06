@@ -23,14 +23,10 @@
 
 BCHCode::BCHCode(int length_p, int k_p, int t_p,
             uint32_t prim_poly_p,
-            uint32_t gen_poly_p,
-            bool lsb_first_p,
-            bool parity_first_p)
+            uint32_t gen_poly_p)
     : length(length_p),
       k(k_p),
-      prim_poly(prim_poly_p),
-      lsb_first(lsb_first_p),
-      parity_first(parity_first_p)
+      prim_poly(prim_poly_p)
 {
     if (length <= 0)
         throw std::invalid_argument("BCHCode: n must be > 0");
@@ -212,9 +208,9 @@ void BCHCode::gen_poly()
 //         }
 }
 
-void BCHCode::encode(uint8_t datai[],uint8_t datao[])
+void BCHCode::encode(uint8_t datai[],uint8_t datao[], bool msb_first)
 /*
-* Compute redundacy bb[], the coefficients of b(x). The redundancy
+* Compute redundacy bits, i.e. the coefficients of b(x). The redundancy
 * polynomial b(x) is the remainder after dividing x^(length-k)*datai(x)
 * by the generator polynomial g(x).
 */
@@ -222,37 +218,36 @@ void BCHCode::encode(uint8_t datai[],uint8_t datao[])
     int    i, j;
     int    feedback;
 
-    // Initialize reminder
+    // Lambda functions to manage data indices in both directions
+    auto datai_idx = [&](int i) -> int { return msb_first ? i : (k - 1 - i); };
+    auto datao_idx = [&](int i) -> int { return msb_first ? i : (length - 1 - i); };
+    
+    // Copy data to output and initialize redundancy part
     for (i = 0; i < length - k; i++)
-        bb[i] = 0;
+        datao[datao_idx(i)] = 0;
+    for (i = 0; i < k; i++)
+        datao[datao_idx(i + length - k)] = datai[datai_idx(i)];  
+
     // Division (fastest version when compiled with -O3)
     for (i = k - 1; i >= 0; i--) {
-        feedback = datai[i] ^ bb[length - k - 1];
+        feedback = datai[datai_idx(i)] ^ datao[datao_idx(length - k - 1)];
         if (feedback != 0) {
             for (j = length - k - 1; j > 0; j--)
-                if (g[j] != 0)
-                    bb[j] = bb[j - 1] ^ feedback;
-                else
-                    bb[j] = bb[j - 1];
-            bb[0] = 1;  // it was bb[0] = g[0] && feedback, but g[0] is 1 by construction and feedback is also 1.
+                datao[datao_idx(j)] = (g[j] != 0) ? datao[datao_idx(j-1)] ^ feedback : datao[datao_idx(j-1)];
+            datao[datao_idx(0)] = 1;
         } else {
             for (j = length - k - 1; j > 0; j--)
-                bb[j] = bb[j - 1];
-            bb[0] = 0;
+                datao[datao_idx(j)] = datao[datao_idx(j-1)];
+            datao[datao_idx(0)] = 0;
         }
     }
-    // Copy data and reminder to output
-    for (i = 0; i < length - k; i++)
-        datao[i] = bb[i];
-    for (i = 0; i < k; i++)
-        datao[i + length - k] = datai[i];
 }
 
-int BCHCode::decode(uint8_t datai[],uint8_t datao[])
+int BCHCode::decode(uint8_t datai[],uint8_t datao[], bool msb_first)
   /*
   * Simon Rockliff's implementation of Berlekamp's algorithm.
   *
-  * Assume we have received bits in recd[i], i=0..(n-1).
+  * Received bits are in data[i], i=0..(n-1).
   *
   * Compute the 2*t syndromes by substituting alpha^i into rec(X) and
   * evaluating, storing the syndromes in s[i], i=1..2t (leave s[0] zero) .
@@ -276,14 +271,15 @@ int BCHCode::decode(uint8_t datai[],uint8_t datao[])
     int    elp[1026][1024], d[1026], l[1026], u_lu[1026], s[1025];
     int    loc[200], reg[201];
 
+    // Lambda functions to manage data indices in both directions
+    auto datao_idx = [&](int i) -> int { return msb_first ? i : (k - 1 - i); };
+    auto datai_idx = [&](int i) -> int { return msb_first ? i : (length - 1 - i); };
+    
     t2 = 2 * t;
 
     /* copy input codeword to output */
-    count=0;
-    for (i = length - k; i < length; i++) {
-        datao[count]= datai[i];
-        count++;
-    }
+    for (i = length - k, j = 0; i < length; i++, j++)
+        datao[datao_idx(j)]= datai[datai_idx(i)];
     
     /* first form the syndromes */
     //printf("S(x) = ");
@@ -291,7 +287,7 @@ int BCHCode::decode(uint8_t datai[],uint8_t datao[])
     for (i = 1; i <= t2; i++) {
         s[i] = 0;
         for (j = 0; j < length; j++)
-            if (datai[j] != 0)
+            if (datai[datai_idx(j)] != 0)
                 s[i] ^= alpha_to[(i * j) % n];
         if (s[i] != 0)
             syn_error = 1; /* set error flag if non-zero syndrome */
@@ -430,7 +426,7 @@ int BCHCode::decode(uint8_t datai[],uint8_t datao[])
                 for (i = 0; i < l[u]; i++) {
                     int idx = loc[i] - (length - k);
                     if (idx >= 0)
-                        datao[idx] ^= 1;
+                        datao[datao_idx(idx)] ^= 1;
                 }
                 return l[u];
             } 

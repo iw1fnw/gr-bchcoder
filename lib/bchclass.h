@@ -28,23 +28,19 @@ class BCHCode {
 public:
     int m, n, length, k, t, d;  // d may not be needed here. Used only withing gen_poly().
     uint32_t prim_poly;
-    bool lsb_first, parity_first;
     
     BCHCode(int length_p, int k_p, int t_p,
             uint32_t prim_poly_p = 0,
-            uint32_t gen_poly_p = 0,
-            bool lsb_first_p = false,
-            bool parity_first_p = false);
+            uint32_t gen_poly_p = 0);
     
-    void encode( uint8_t datai[],uint8_t datao[]);
+    void encode( uint8_t datai[],uint8_t datao[], bool msb_first = true);
 
-    int decode( uint8_t datai[],uint8_t datao[]);
+    int decode( uint8_t datai[],uint8_t datao[], bool msb_first = true);
 
 private:
 
     int p[21];
     int alpha_to[1048576], index_of[1048576], g[548576];
-    int recd[1048576], data[1048576], bb[548576];
 
     static constexpr uint32_t prim_poly_table[] = {
         0,        // m=0  (unused)
